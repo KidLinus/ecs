@@ -6,5 +6,5 @@ func (storage *Storage[ID]) Remove(id ID) {
 		return
 	}
 	delete(storage.Entitys, id)
-	storage.Compounds[entity.Compound].Removed = sliceInsertOrdered(storage.Compounds[entity.Compound].Removed, id)
+	storage.Compounds[entity.Compound].EntitysRemoved = sliceInsertOrdered(storage.Compounds[entity.Compound].EntitysRemoved, id)
 }

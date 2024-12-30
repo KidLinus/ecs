@@ -3,8 +3,9 @@ package ecs
 import (
 	"encoding/json"
 	"math"
-	"math/rand"
 	"testing"
+
+	"math/rand"
 )
 
 type Position struct{ X, Y int }
@@ -45,6 +46,8 @@ func BenchmarkPut1m(b *testing.B) {
 	}
 }
 
+// Benchmark1mMove-8   	     349	   3526957 ns/op	       0 B/op	       0 allocs/op
+
 func Benchmark1mMove(b *testing.B) {
 	storage := New[uint32]()
 	for i := 0; i < 1_000_000; i++ {
@@ -59,6 +62,8 @@ func Benchmark1mMove(b *testing.B) {
 		})
 	}
 }
+
+// BenchmarkBouncing-8   	     206	   5323178 ns/op	       0 B/op	       0 allocs/op
 
 func BenchmarkBouncing(b *testing.B) {
 	type Position struct{ X, Y int }
@@ -145,6 +150,12 @@ func Benchmark1mMoveQuery(b *testing.B) {
 		})
 	}
 }
+
+// BenchmarkLoopEcsMixedQuery-8   	   13772	     93452 ns/op	    9303 B/op	       0 allocs/op
+// BenchmarkLoopEcsMixedQuery-8   	   16664	     73580 ns/op	    9231 B/op	       3 allocs/op
+// BenchmarkLoopEcsMixedQuery-8        17169         71048 ns/op        10243 B/op         3 allocs/op
+// BenchmarkLoopEcsMixedQuery-8   	   17736	     69291 ns/op	    9921 B/op	       3 allocs/op
+// BenchmarkLoopEcsMixedQuery-8   	   18907	     64818 ns/op	    9319 B/op	       3 allocs/op
 
 func BenchmarkLoopEcsMixedQuery(b *testing.B) {
 	type Value int

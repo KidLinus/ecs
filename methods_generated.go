@@ -3,7 +3,6 @@ package ecs
 
 import (
 	"fmt"
-	"slices"
 )
 
 func Set1[ID Int, T1 any](storage *Storage[ID], id ID, v1 T1) {
@@ -12,14 +11,14 @@ func Set1[ID Int, T1 any](storage *Storage[ID], id ID, v1 T1) {
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+
 }
 
 func Set2[ID Int, T1, T2 any](storage *Storage[ID], id ID, v1 T1, v2 T2) {
@@ -28,16 +27,16 @@ func Set2[ID Int, T1, T2 any](storage *Storage[ID], id ID, v1 T1, v2 T2) {
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+
 }
 
 func Set3[ID Int, T1, T2, T3 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3) {
@@ -46,18 +45,18 @@ func Set3[ID Int, T1, T2, T3 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+
 }
 
 func Set4[ID Int, T1, T2, T3, T4 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4) {
@@ -66,20 +65,20 @@ func Set4[ID Int, T1, T2, T3, T4 any](storage *Storage[ID], id ID, v1 T1, v2 T2,
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+
 }
 
 func Set5[ID Int, T1, T2, T3, T4, T5 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5) {
@@ -88,22 +87,22 @@ func Set5[ID Int, T1, T2, T3, T4, T5 any](storage *Storage[ID], id ID, v1 T1, v2
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+
 }
 
 func Set6[ID Int, T1, T2, T3, T4, T5, T6 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6) {
@@ -112,24 +111,24 @@ func Set6[ID Int, T1, T2, T3, T4, T5, T6 any](storage *Storage[ID], id ID, v1 T1
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+
 }
 
 func Set7[ID Int, T1, T2, T3, T4, T5, T6, T7 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7) {
@@ -138,26 +137,26 @@ func Set7[ID Int, T1, T2, T3, T4, T5, T6, T7 any](storage *Storage[ID], id ID, v
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+
 }
 
 func Set8[ID Int, T1, T2, T3, T4, T5, T6, T7, T8 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8) {
@@ -166,28 +165,28 @@ func Set8[ID Int, T1, T2, T3, T4, T5, T6, T7, T8 any](storage *Storage[ID], id I
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+
 }
 
 func Set9[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9) {
@@ -196,30 +195,30 @@ func Set9[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9 any](storage *Storage[ID], 
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+
 }
 
 func Set10[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, v10 T10) {
@@ -228,32 +227,32 @@ func Set10[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10 any](storage *Storage
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
-		compound.Values[components[9]] = []T10{v10}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
+		compound.Components[9].Data = &slice[T10]{Data: []T10{v10}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
-	compound.Values[components[9]] = append(compound.Values[components[9]].([]T10), v10)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+	compound.Components[9].Data.(*slice[T10]).append(v10)
+
 }
 
 func Set11[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, v10 T10, v11 T11) {
@@ -262,34 +261,34 @@ func Set11[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11 any](storage *St
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
-		compound.Values[components[9]] = []T10{v10}
-		compound.Values[components[10]] = []T11{v11}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
+		compound.Components[9].Data = &slice[T10]{Data: []T10{v10}}
+		compound.Components[10].Data = &slice[T11]{Data: []T11{v11}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
-	compound.Values[components[9]] = append(compound.Values[components[9]].([]T10), v10)
-	compound.Values[components[10]] = append(compound.Values[components[10]].([]T11), v11)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+	compound.Components[9].Data.(*slice[T10]).append(v10)
+	compound.Components[10].Data.(*slice[T11]).append(v11)
+
 }
 
 func Set12[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, v10 T10, v11 T11, v12 T12) {
@@ -298,36 +297,36 @@ func Set12[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12 any](storag
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
-		compound.Values[components[9]] = []T10{v10}
-		compound.Values[components[10]] = []T11{v11}
-		compound.Values[components[11]] = []T12{v12}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
+		compound.Components[9].Data = &slice[T10]{Data: []T10{v10}}
+		compound.Components[10].Data = &slice[T11]{Data: []T11{v11}}
+		compound.Components[11].Data = &slice[T12]{Data: []T12{v12}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
-	compound.Values[components[9]] = append(compound.Values[components[9]].([]T10), v10)
-	compound.Values[components[10]] = append(compound.Values[components[10]].([]T11), v11)
-	compound.Values[components[11]] = append(compound.Values[components[11]].([]T12), v12)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+	compound.Components[9].Data.(*slice[T10]).append(v10)
+	compound.Components[10].Data.(*slice[T11]).append(v11)
+	compound.Components[11].Data.(*slice[T12]).append(v12)
+
 }
 
 func Set13[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, v10 T10, v11 T11, v12 T12, v13 T13) {
@@ -336,38 +335,38 @@ func Set13[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13 any](s
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
-		compound.Values[components[9]] = []T10{v10}
-		compound.Values[components[10]] = []T11{v11}
-		compound.Values[components[11]] = []T12{v12}
-		compound.Values[components[12]] = []T13{v13}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
+		compound.Components[9].Data = &slice[T10]{Data: []T10{v10}}
+		compound.Components[10].Data = &slice[T11]{Data: []T11{v11}}
+		compound.Components[11].Data = &slice[T12]{Data: []T12{v12}}
+		compound.Components[12].Data = &slice[T13]{Data: []T13{v13}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
-	compound.Values[components[9]] = append(compound.Values[components[9]].([]T10), v10)
-	compound.Values[components[10]] = append(compound.Values[components[10]].([]T11), v11)
-	compound.Values[components[11]] = append(compound.Values[components[11]].([]T12), v12)
-	compound.Values[components[12]] = append(compound.Values[components[12]].([]T13), v13)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+	compound.Components[9].Data.(*slice[T10]).append(v10)
+	compound.Components[10].Data.(*slice[T11]).append(v11)
+	compound.Components[11].Data.(*slice[T12]).append(v12)
+	compound.Components[12].Data.(*slice[T13]).append(v13)
+
 }
 
 func Set14[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, v10 T10, v11 T11, v12 T12, v13 T13, v14 T14) {
@@ -376,40 +375,40 @@ func Set14[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14 a
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
-		compound.Values[components[9]] = []T10{v10}
-		compound.Values[components[10]] = []T11{v11}
-		compound.Values[components[11]] = []T12{v12}
-		compound.Values[components[12]] = []T13{v13}
-		compound.Values[components[13]] = []T14{v14}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
+		compound.Components[9].Data = &slice[T10]{Data: []T10{v10}}
+		compound.Components[10].Data = &slice[T11]{Data: []T11{v11}}
+		compound.Components[11].Data = &slice[T12]{Data: []T12{v12}}
+		compound.Components[12].Data = &slice[T13]{Data: []T13{v13}}
+		compound.Components[13].Data = &slice[T14]{Data: []T14{v14}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
-	compound.Values[components[9]] = append(compound.Values[components[9]].([]T10), v10)
-	compound.Values[components[10]] = append(compound.Values[components[10]].([]T11), v11)
-	compound.Values[components[11]] = append(compound.Values[components[11]].([]T12), v12)
-	compound.Values[components[12]] = append(compound.Values[components[12]].([]T13), v13)
-	compound.Values[components[13]] = append(compound.Values[components[13]].([]T14), v14)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+	compound.Components[9].Data.(*slice[T10]).append(v10)
+	compound.Components[10].Data.(*slice[T11]).append(v11)
+	compound.Components[11].Data.(*slice[T12]).append(v12)
+	compound.Components[12].Data.(*slice[T13]).append(v13)
+	compound.Components[13].Data.(*slice[T14]).append(v14)
+
 }
 
 func Set15[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, v10 T10, v11 T11, v12 T12, v13 T13, v14 T14, v15 T15) {
@@ -418,42 +417,42 @@ func Set15[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, 
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
-		compound.Values[components[9]] = []T10{v10}
-		compound.Values[components[10]] = []T11{v11}
-		compound.Values[components[11]] = []T12{v12}
-		compound.Values[components[12]] = []T13{v13}
-		compound.Values[components[13]] = []T14{v14}
-		compound.Values[components[14]] = []T15{v15}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
+		compound.Components[9].Data = &slice[T10]{Data: []T10{v10}}
+		compound.Components[10].Data = &slice[T11]{Data: []T11{v11}}
+		compound.Components[11].Data = &slice[T12]{Data: []T12{v12}}
+		compound.Components[12].Data = &slice[T13]{Data: []T13{v13}}
+		compound.Components[13].Data = &slice[T14]{Data: []T14{v14}}
+		compound.Components[14].Data = &slice[T15]{Data: []T15{v15}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
-	compound.Values[components[9]] = append(compound.Values[components[9]].([]T10), v10)
-	compound.Values[components[10]] = append(compound.Values[components[10]].([]T11), v11)
-	compound.Values[components[11]] = append(compound.Values[components[11]].([]T12), v12)
-	compound.Values[components[12]] = append(compound.Values[components[12]].([]T13), v13)
-	compound.Values[components[13]] = append(compound.Values[components[13]].([]T14), v14)
-	compound.Values[components[14]] = append(compound.Values[components[14]].([]T15), v15)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+	compound.Components[9].Data.(*slice[T10]).append(v10)
+	compound.Components[10].Data.(*slice[T11]).append(v11)
+	compound.Components[11].Data.(*slice[T12]).append(v12)
+	compound.Components[12].Data.(*slice[T13]).append(v13)
+	compound.Components[13].Data.(*slice[T14]).append(v14)
+	compound.Components[14].Data.(*slice[T15]).append(v15)
+
 }
 
 func Set16[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, v10 T10, v11 T11, v12 T12, v13 T13, v14 T14, v15 T15, v16 T16) {
@@ -462,44 +461,44 @@ func Set16[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, 
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
-		compound.Values[components[9]] = []T10{v10}
-		compound.Values[components[10]] = []T11{v11}
-		compound.Values[components[11]] = []T12{v12}
-		compound.Values[components[12]] = []T13{v13}
-		compound.Values[components[13]] = []T14{v14}
-		compound.Values[components[14]] = []T15{v15}
-		compound.Values[components[15]] = []T16{v16}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
+		compound.Components[9].Data = &slice[T10]{Data: []T10{v10}}
+		compound.Components[10].Data = &slice[T11]{Data: []T11{v11}}
+		compound.Components[11].Data = &slice[T12]{Data: []T12{v12}}
+		compound.Components[12].Data = &slice[T13]{Data: []T13{v13}}
+		compound.Components[13].Data = &slice[T14]{Data: []T14{v14}}
+		compound.Components[14].Data = &slice[T15]{Data: []T15{v15}}
+		compound.Components[15].Data = &slice[T16]{Data: []T16{v16}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
-	compound.Values[components[9]] = append(compound.Values[components[9]].([]T10), v10)
-	compound.Values[components[10]] = append(compound.Values[components[10]].([]T11), v11)
-	compound.Values[components[11]] = append(compound.Values[components[11]].([]T12), v12)
-	compound.Values[components[12]] = append(compound.Values[components[12]].([]T13), v13)
-	compound.Values[components[13]] = append(compound.Values[components[13]].([]T14), v14)
-	compound.Values[components[14]] = append(compound.Values[components[14]].([]T15), v15)
-	compound.Values[components[15]] = append(compound.Values[components[15]].([]T16), v16)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+	compound.Components[9].Data.(*slice[T10]).append(v10)
+	compound.Components[10].Data.(*slice[T11]).append(v11)
+	compound.Components[11].Data.(*slice[T12]).append(v12)
+	compound.Components[12].Data.(*slice[T13]).append(v13)
+	compound.Components[13].Data.(*slice[T14]).append(v14)
+	compound.Components[14].Data.(*slice[T15]).append(v15)
+	compound.Components[15].Data.(*slice[T16]).append(v16)
+
 }
 
 func Set17[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, v10 T10, v11 T11, v12 T12, v13 T13, v14 T14, v15 T15, v16 T16, v17 T17) {
@@ -508,46 +507,46 @@ func Set17[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, 
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
-		compound.Values[components[9]] = []T10{v10}
-		compound.Values[components[10]] = []T11{v11}
-		compound.Values[components[11]] = []T12{v12}
-		compound.Values[components[12]] = []T13{v13}
-		compound.Values[components[13]] = []T14{v14}
-		compound.Values[components[14]] = []T15{v15}
-		compound.Values[components[15]] = []T16{v16}
-		compound.Values[components[16]] = []T17{v17}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
+		compound.Components[9].Data = &slice[T10]{Data: []T10{v10}}
+		compound.Components[10].Data = &slice[T11]{Data: []T11{v11}}
+		compound.Components[11].Data = &slice[T12]{Data: []T12{v12}}
+		compound.Components[12].Data = &slice[T13]{Data: []T13{v13}}
+		compound.Components[13].Data = &slice[T14]{Data: []T14{v14}}
+		compound.Components[14].Data = &slice[T15]{Data: []T15{v15}}
+		compound.Components[15].Data = &slice[T16]{Data: []T16{v16}}
+		compound.Components[16].Data = &slice[T17]{Data: []T17{v17}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
-	compound.Values[components[9]] = append(compound.Values[components[9]].([]T10), v10)
-	compound.Values[components[10]] = append(compound.Values[components[10]].([]T11), v11)
-	compound.Values[components[11]] = append(compound.Values[components[11]].([]T12), v12)
-	compound.Values[components[12]] = append(compound.Values[components[12]].([]T13), v13)
-	compound.Values[components[13]] = append(compound.Values[components[13]].([]T14), v14)
-	compound.Values[components[14]] = append(compound.Values[components[14]].([]T15), v15)
-	compound.Values[components[15]] = append(compound.Values[components[15]].([]T16), v16)
-	compound.Values[components[16]] = append(compound.Values[components[16]].([]T17), v17)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+	compound.Components[9].Data.(*slice[T10]).append(v10)
+	compound.Components[10].Data.(*slice[T11]).append(v11)
+	compound.Components[11].Data.(*slice[T12]).append(v12)
+	compound.Components[12].Data.(*slice[T13]).append(v13)
+	compound.Components[13].Data.(*slice[T14]).append(v14)
+	compound.Components[14].Data.(*slice[T15]).append(v15)
+	compound.Components[15].Data.(*slice[T16]).append(v16)
+	compound.Components[16].Data.(*slice[T17]).append(v17)
+
 }
 
 func Set18[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, v10 T10, v11 T11, v12 T12, v13 T13, v14 T14, v15 T15, v16 T16, v17 T17, v18 T18) {
@@ -556,48 +555,48 @@ func Set18[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, 
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
-		compound.Values[components[9]] = []T10{v10}
-		compound.Values[components[10]] = []T11{v11}
-		compound.Values[components[11]] = []T12{v12}
-		compound.Values[components[12]] = []T13{v13}
-		compound.Values[components[13]] = []T14{v14}
-		compound.Values[components[14]] = []T15{v15}
-		compound.Values[components[15]] = []T16{v16}
-		compound.Values[components[16]] = []T17{v17}
-		compound.Values[components[17]] = []T18{v18}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
+		compound.Components[9].Data = &slice[T10]{Data: []T10{v10}}
+		compound.Components[10].Data = &slice[T11]{Data: []T11{v11}}
+		compound.Components[11].Data = &slice[T12]{Data: []T12{v12}}
+		compound.Components[12].Data = &slice[T13]{Data: []T13{v13}}
+		compound.Components[13].Data = &slice[T14]{Data: []T14{v14}}
+		compound.Components[14].Data = &slice[T15]{Data: []T15{v15}}
+		compound.Components[15].Data = &slice[T16]{Data: []T16{v16}}
+		compound.Components[16].Data = &slice[T17]{Data: []T17{v17}}
+		compound.Components[17].Data = &slice[T18]{Data: []T18{v18}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
-	compound.Values[components[9]] = append(compound.Values[components[9]].([]T10), v10)
-	compound.Values[components[10]] = append(compound.Values[components[10]].([]T11), v11)
-	compound.Values[components[11]] = append(compound.Values[components[11]].([]T12), v12)
-	compound.Values[components[12]] = append(compound.Values[components[12]].([]T13), v13)
-	compound.Values[components[13]] = append(compound.Values[components[13]].([]T14), v14)
-	compound.Values[components[14]] = append(compound.Values[components[14]].([]T15), v15)
-	compound.Values[components[15]] = append(compound.Values[components[15]].([]T16), v16)
-	compound.Values[components[16]] = append(compound.Values[components[16]].([]T17), v17)
-	compound.Values[components[17]] = append(compound.Values[components[17]].([]T18), v18)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+	compound.Components[9].Data.(*slice[T10]).append(v10)
+	compound.Components[10].Data.(*slice[T11]).append(v11)
+	compound.Components[11].Data.(*slice[T12]).append(v12)
+	compound.Components[12].Data.(*slice[T13]).append(v13)
+	compound.Components[13].Data.(*slice[T14]).append(v14)
+	compound.Components[14].Data.(*slice[T15]).append(v15)
+	compound.Components[15].Data.(*slice[T16]).append(v16)
+	compound.Components[16].Data.(*slice[T17]).append(v17)
+	compound.Components[17].Data.(*slice[T18]).append(v18)
+
 }
 
 func Set19[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, v10 T10, v11 T11, v12 T12, v13 T13, v14 T14, v15 T15, v16 T16, v17 T17, v18 T18, v19 T19) {
@@ -606,50 +605,50 @@ func Set19[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, 
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
-		compound.Values[components[9]] = []T10{v10}
-		compound.Values[components[10]] = []T11{v11}
-		compound.Values[components[11]] = []T12{v12}
-		compound.Values[components[12]] = []T13{v13}
-		compound.Values[components[13]] = []T14{v14}
-		compound.Values[components[14]] = []T15{v15}
-		compound.Values[components[15]] = []T16{v16}
-		compound.Values[components[16]] = []T17{v17}
-		compound.Values[components[17]] = []T18{v18}
-		compound.Values[components[18]] = []T19{v19}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
+		compound.Components[9].Data = &slice[T10]{Data: []T10{v10}}
+		compound.Components[10].Data = &slice[T11]{Data: []T11{v11}}
+		compound.Components[11].Data = &slice[T12]{Data: []T12{v12}}
+		compound.Components[12].Data = &slice[T13]{Data: []T13{v13}}
+		compound.Components[13].Data = &slice[T14]{Data: []T14{v14}}
+		compound.Components[14].Data = &slice[T15]{Data: []T15{v15}}
+		compound.Components[15].Data = &slice[T16]{Data: []T16{v16}}
+		compound.Components[16].Data = &slice[T17]{Data: []T17{v17}}
+		compound.Components[17].Data = &slice[T18]{Data: []T18{v18}}
+		compound.Components[18].Data = &slice[T19]{Data: []T19{v19}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
-	compound.Values[components[9]] = append(compound.Values[components[9]].([]T10), v10)
-	compound.Values[components[10]] = append(compound.Values[components[10]].([]T11), v11)
-	compound.Values[components[11]] = append(compound.Values[components[11]].([]T12), v12)
-	compound.Values[components[12]] = append(compound.Values[components[12]].([]T13), v13)
-	compound.Values[components[13]] = append(compound.Values[components[13]].([]T14), v14)
-	compound.Values[components[14]] = append(compound.Values[components[14]].([]T15), v15)
-	compound.Values[components[15]] = append(compound.Values[components[15]].([]T16), v16)
-	compound.Values[components[16]] = append(compound.Values[components[16]].([]T17), v17)
-	compound.Values[components[17]] = append(compound.Values[components[17]].([]T18), v18)
-	compound.Values[components[18]] = append(compound.Values[components[18]].([]T19), v19)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+	compound.Components[9].Data.(*slice[T10]).append(v10)
+	compound.Components[10].Data.(*slice[T11]).append(v11)
+	compound.Components[11].Data.(*slice[T12]).append(v12)
+	compound.Components[12].Data.(*slice[T13]).append(v13)
+	compound.Components[13].Data.(*slice[T14]).append(v14)
+	compound.Components[14].Data.(*slice[T15]).append(v15)
+	compound.Components[15].Data.(*slice[T16]).append(v16)
+	compound.Components[16].Data.(*slice[T17]).append(v17)
+	compound.Components[17].Data.(*slice[T18]).append(v18)
+	compound.Components[18].Data.(*slice[T19]).append(v19)
+
 }
 
 func Set20[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20 any](storage *Storage[ID], id ID, v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, v10 T10, v11 T11, v12 T12, v13 T13, v14 T14, v15 T15, v16 T16, v17 T17, v18 T18, v19 T19, v20 T20) {
@@ -658,52 +657,52 @@ func Set20[ID Int, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, 
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
 	storage.Entitys[id] = entity
 	compound := storage.Compounds[entity.Compound]
-	compound.IDs = append(compound.IDs, id)
-	if compound.Values == nil {
-		compound.Values = make([]any, slices.Max(components)+1)
-		compound.Values[components[0]] = []T1{v1}
-		compound.Values[components[1]] = []T2{v2}
-		compound.Values[components[2]] = []T3{v3}
-		compound.Values[components[3]] = []T4{v4}
-		compound.Values[components[4]] = []T5{v5}
-		compound.Values[components[5]] = []T6{v6}
-		compound.Values[components[6]] = []T7{v7}
-		compound.Values[components[7]] = []T8{v8}
-		compound.Values[components[8]] = []T9{v9}
-		compound.Values[components[9]] = []T10{v10}
-		compound.Values[components[10]] = []T11{v11}
-		compound.Values[components[11]] = []T12{v12}
-		compound.Values[components[12]] = []T13{v13}
-		compound.Values[components[13]] = []T14{v14}
-		compound.Values[components[14]] = []T15{v15}
-		compound.Values[components[15]] = []T16{v16}
-		compound.Values[components[16]] = []T17{v17}
-		compound.Values[components[17]] = []T18{v18}
-		compound.Values[components[18]] = []T19{v19}
-		compound.Values[components[19]] = []T20{v20}
+	compound.Entitys = append(compound.Entitys, id)
+	if compound.Components[0].Data == nil {
+		compound.Components[0].Data = &slice[T1]{Data: []T1{v1}}
+		compound.Components[1].Data = &slice[T2]{Data: []T2{v2}}
+		compound.Components[2].Data = &slice[T3]{Data: []T3{v3}}
+		compound.Components[3].Data = &slice[T4]{Data: []T4{v4}}
+		compound.Components[4].Data = &slice[T5]{Data: []T5{v5}}
+		compound.Components[5].Data = &slice[T6]{Data: []T6{v6}}
+		compound.Components[6].Data = &slice[T7]{Data: []T7{v7}}
+		compound.Components[7].Data = &slice[T8]{Data: []T8{v8}}
+		compound.Components[8].Data = &slice[T9]{Data: []T9{v9}}
+		compound.Components[9].Data = &slice[T10]{Data: []T10{v10}}
+		compound.Components[10].Data = &slice[T11]{Data: []T11{v11}}
+		compound.Components[11].Data = &slice[T12]{Data: []T12{v12}}
+		compound.Components[12].Data = &slice[T13]{Data: []T13{v13}}
+		compound.Components[13].Data = &slice[T14]{Data: []T14{v14}}
+		compound.Components[14].Data = &slice[T15]{Data: []T15{v15}}
+		compound.Components[15].Data = &slice[T16]{Data: []T16{v16}}
+		compound.Components[16].Data = &slice[T17]{Data: []T17{v17}}
+		compound.Components[17].Data = &slice[T18]{Data: []T18{v18}}
+		compound.Components[18].Data = &slice[T19]{Data: []T19{v19}}
+		compound.Components[19].Data = &slice[T20]{Data: []T20{v20}}
 
 		return
 	}
-	compound.Values[components[0]] = append(compound.Values[components[0]].([]T1), v1)
-	compound.Values[components[1]] = append(compound.Values[components[1]].([]T2), v2)
-	compound.Values[components[2]] = append(compound.Values[components[2]].([]T3), v3)
-	compound.Values[components[3]] = append(compound.Values[components[3]].([]T4), v4)
-	compound.Values[components[4]] = append(compound.Values[components[4]].([]T5), v5)
-	compound.Values[components[5]] = append(compound.Values[components[5]].([]T6), v6)
-	compound.Values[components[6]] = append(compound.Values[components[6]].([]T7), v7)
-	compound.Values[components[7]] = append(compound.Values[components[7]].([]T8), v8)
-	compound.Values[components[8]] = append(compound.Values[components[8]].([]T9), v9)
-	compound.Values[components[9]] = append(compound.Values[components[9]].([]T10), v10)
-	compound.Values[components[10]] = append(compound.Values[components[10]].([]T11), v11)
-	compound.Values[components[11]] = append(compound.Values[components[11]].([]T12), v12)
-	compound.Values[components[12]] = append(compound.Values[components[12]].([]T13), v13)
-	compound.Values[components[13]] = append(compound.Values[components[13]].([]T14), v14)
-	compound.Values[components[14]] = append(compound.Values[components[14]].([]T15), v15)
-	compound.Values[components[15]] = append(compound.Values[components[15]].([]T16), v16)
-	compound.Values[components[16]] = append(compound.Values[components[16]].([]T17), v17)
-	compound.Values[components[17]] = append(compound.Values[components[17]].([]T18), v18)
-	compound.Values[components[18]] = append(compound.Values[components[18]].([]T19), v19)
-	compound.Values[components[19]] = append(compound.Values[components[19]].([]T20), v20)
+	compound.Components[0].Data.(*slice[T1]).append(v1)
+	compound.Components[1].Data.(*slice[T2]).append(v2)
+	compound.Components[2].Data.(*slice[T3]).append(v3)
+	compound.Components[3].Data.(*slice[T4]).append(v4)
+	compound.Components[4].Data.(*slice[T5]).append(v5)
+	compound.Components[5].Data.(*slice[T6]).append(v6)
+	compound.Components[6].Data.(*slice[T7]).append(v7)
+	compound.Components[7].Data.(*slice[T8]).append(v8)
+	compound.Components[8].Data.(*slice[T9]).append(v9)
+	compound.Components[9].Data.(*slice[T10]).append(v10)
+	compound.Components[10].Data.(*slice[T11]).append(v11)
+	compound.Components[11].Data.(*slice[T12]).append(v12)
+	compound.Components[12].Data.(*slice[T13]).append(v13)
+	compound.Components[13].Data.(*slice[T14]).append(v14)
+	compound.Components[14].Data.(*slice[T15]).append(v15)
+	compound.Components[15].Data.(*slice[T16]).append(v16)
+	compound.Components[16].Data.(*slice[T17]).append(v17)
+	compound.Components[17].Data.(*slice[T18]).append(v18)
+	compound.Components[18].Data.(*slice[T19]).append(v19)
+	compound.Components[19].Data.(*slice[T20]).append(v20)
+
 }
 
 type Q1[ID Int, T1 any] struct {
@@ -2700,61 +2699,76 @@ func (q *Q1[ID, T1]) Each(fn func(ID, *T1), queryOptions ...Q1Option) {
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx))
 			if *options.Stop {
 				return
@@ -2776,71 +2790,84 @@ func (q *Q2[ID, T1, T2]) Each(fn func(ID, *T1, *T2), queryOptions ...Q2Option) {
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx))
 			if *options.Stop {
 				return
@@ -2862,81 +2889,92 @@ func (q *Q3[ID, T1, T2, T3]) Each(fn func(ID, *T1, *T2, *T3), queryOptions ...Q3
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx))
 			if *options.Stop {
 				return
@@ -2958,91 +2996,100 @@ func (q *Q4[ID, T1, T2, T3, T4]) Each(fn func(ID, *T1, *T2, *T3, *T4), queryOpti
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx))
 			if *options.Stop {
 				return
@@ -3064,101 +3111,108 @@ func (q *Q5[ID, T1, T2, T3, T4, T5]) Each(fn func(ID, *T1, *T2, *T3, *T4, *T5), 
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx))
 			if *options.Stop {
 				return
@@ -3180,111 +3234,116 @@ func (q *Q6[ID, T1, T2, T3, T4, T5, T6]) Each(fn func(ID, *T1, *T2, *T3, *T4, *T
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx))
 			if *options.Stop {
 				return
@@ -3306,121 +3365,124 @@ func (q *Q7[ID, T1, T2, T3, T4, T5, T6, T7]) Each(fn func(ID, *T1, *T2, *T3, *T4
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx))
 			if *options.Stop {
 				return
@@ -3442,131 +3504,132 @@ func (q *Q8[ID, T1, T2, T3, T4, T5, T6, T7, T8]) Each(fn func(ID, *T1, *T2, *T3,
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx))
 			if *options.Stop {
 				return
@@ -3588,141 +3651,140 @@ func (q *Q9[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9]) Each(fn func(ID, *T1, *T2, 
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx))
 			if *options.Stop {
 				return
@@ -3744,151 +3806,148 @@ func (q *Q10[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10]) Each(fn func(ID, *T1,
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
-				continue
-			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
-		}
 		var v10s []T10
-		if q.Components[9] > componentMax || compound.Values[q.Components[9]] == nil {
-			if !options.Optional[9] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v10s = compound.Values[q.Components[9]].([]T10)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+			if component.ID == q.Components[9] {
+				v10s = component.Data.(*slice[T10]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+		if v10s == nil && !options.Optional[9] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-				v10s = sliceRemove(v10s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-			compound.Values[q.Components[9]] = v10s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx))
 			if *options.Stop {
 				return
@@ -3910,161 +3969,156 @@ func (q *Q11[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11]) Each(fn func(ID,
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
-				continue
-			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
-		}
 		var v10s []T10
-		if q.Components[9] > componentMax || compound.Values[q.Components[9]] == nil {
-			if !options.Optional[9] {
-				continue
-			}
-		} else {
-			v10s = compound.Values[q.Components[9]].([]T10)
-		}
 		var v11s []T11
-		if q.Components[10] > componentMax || compound.Values[q.Components[10]] == nil {
-			if !options.Optional[10] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v11s = compound.Values[q.Components[10]].([]T11)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+			if component.ID == q.Components[9] {
+				v10s = component.Data.(*slice[T10]).Data
+				continue
+			}
+			if component.ID == q.Components[10] {
+				v11s = component.Data.(*slice[T11]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+		if v10s == nil && !options.Optional[9] {
+			continue
+		}
+		if v11s == nil && !options.Optional[10] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-				v10s = sliceRemove(v10s, idxRemove[i])
-				v11s = sliceRemove(v11s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-			compound.Values[q.Components[9]] = v10s
-			compound.Values[q.Components[10]] = v11s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx))
 			if *options.Stop {
 				return
@@ -4086,171 +4140,164 @@ func (q *Q12[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12]) Each(fn fun
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
-				continue
-			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
-		}
 		var v10s []T10
-		if q.Components[9] > componentMax || compound.Values[q.Components[9]] == nil {
-			if !options.Optional[9] {
-				continue
-			}
-		} else {
-			v10s = compound.Values[q.Components[9]].([]T10)
-		}
 		var v11s []T11
-		if q.Components[10] > componentMax || compound.Values[q.Components[10]] == nil {
-			if !options.Optional[10] {
-				continue
-			}
-		} else {
-			v11s = compound.Values[q.Components[10]].([]T11)
-		}
 		var v12s []T12
-		if q.Components[11] > componentMax || compound.Values[q.Components[11]] == nil {
-			if !options.Optional[11] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v12s = compound.Values[q.Components[11]].([]T12)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+			if component.ID == q.Components[9] {
+				v10s = component.Data.(*slice[T10]).Data
+				continue
+			}
+			if component.ID == q.Components[10] {
+				v11s = component.Data.(*slice[T11]).Data
+				continue
+			}
+			if component.ID == q.Components[11] {
+				v12s = component.Data.(*slice[T12]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+		if v10s == nil && !options.Optional[9] {
+			continue
+		}
+		if v11s == nil && !options.Optional[10] {
+			continue
+		}
+		if v12s == nil && !options.Optional[11] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-				v10s = sliceRemove(v10s, idxRemove[i])
-				v11s = sliceRemove(v11s, idxRemove[i])
-				v12s = sliceRemove(v12s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-			compound.Values[q.Components[9]] = v10s
-			compound.Values[q.Components[10]] = v11s
-			compound.Values[q.Components[11]] = v12s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx))
 			if *options.Stop {
 				return
@@ -4272,181 +4319,172 @@ func (q *Q13[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13]) Each(f
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
-				continue
-			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
-		}
 		var v10s []T10
-		if q.Components[9] > componentMax || compound.Values[q.Components[9]] == nil {
-			if !options.Optional[9] {
-				continue
-			}
-		} else {
-			v10s = compound.Values[q.Components[9]].([]T10)
-		}
 		var v11s []T11
-		if q.Components[10] > componentMax || compound.Values[q.Components[10]] == nil {
-			if !options.Optional[10] {
-				continue
-			}
-		} else {
-			v11s = compound.Values[q.Components[10]].([]T11)
-		}
 		var v12s []T12
-		if q.Components[11] > componentMax || compound.Values[q.Components[11]] == nil {
-			if !options.Optional[11] {
-				continue
-			}
-		} else {
-			v12s = compound.Values[q.Components[11]].([]T12)
-		}
 		var v13s []T13
-		if q.Components[12] > componentMax || compound.Values[q.Components[12]] == nil {
-			if !options.Optional[12] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v13s = compound.Values[q.Components[12]].([]T13)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+			if component.ID == q.Components[9] {
+				v10s = component.Data.(*slice[T10]).Data
+				continue
+			}
+			if component.ID == q.Components[10] {
+				v11s = component.Data.(*slice[T11]).Data
+				continue
+			}
+			if component.ID == q.Components[11] {
+				v12s = component.Data.(*slice[T12]).Data
+				continue
+			}
+			if component.ID == q.Components[12] {
+				v13s = component.Data.(*slice[T13]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+		if v10s == nil && !options.Optional[9] {
+			continue
+		}
+		if v11s == nil && !options.Optional[10] {
+			continue
+		}
+		if v12s == nil && !options.Optional[11] {
+			continue
+		}
+		if v13s == nil && !options.Optional[12] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-				v10s = sliceRemove(v10s, idxRemove[i])
-				v11s = sliceRemove(v11s, idxRemove[i])
-				v12s = sliceRemove(v12s, idxRemove[i])
-				v13s = sliceRemove(v13s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-			compound.Values[q.Components[9]] = v10s
-			compound.Values[q.Components[10]] = v11s
-			compound.Values[q.Components[11]] = v12s
-			compound.Values[q.Components[12]] = v13s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx))
 			if *options.Stop {
 				return
@@ -4468,191 +4506,180 @@ func (q *Q14[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14]) E
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
-				continue
-			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
-		}
 		var v10s []T10
-		if q.Components[9] > componentMax || compound.Values[q.Components[9]] == nil {
-			if !options.Optional[9] {
-				continue
-			}
-		} else {
-			v10s = compound.Values[q.Components[9]].([]T10)
-		}
 		var v11s []T11
-		if q.Components[10] > componentMax || compound.Values[q.Components[10]] == nil {
-			if !options.Optional[10] {
-				continue
-			}
-		} else {
-			v11s = compound.Values[q.Components[10]].([]T11)
-		}
 		var v12s []T12
-		if q.Components[11] > componentMax || compound.Values[q.Components[11]] == nil {
-			if !options.Optional[11] {
-				continue
-			}
-		} else {
-			v12s = compound.Values[q.Components[11]].([]T12)
-		}
 		var v13s []T13
-		if q.Components[12] > componentMax || compound.Values[q.Components[12]] == nil {
-			if !options.Optional[12] {
-				continue
-			}
-		} else {
-			v13s = compound.Values[q.Components[12]].([]T13)
-		}
 		var v14s []T14
-		if q.Components[13] > componentMax || compound.Values[q.Components[13]] == nil {
-			if !options.Optional[13] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v14s = compound.Values[q.Components[13]].([]T14)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+			if component.ID == q.Components[9] {
+				v10s = component.Data.(*slice[T10]).Data
+				continue
+			}
+			if component.ID == q.Components[10] {
+				v11s = component.Data.(*slice[T11]).Data
+				continue
+			}
+			if component.ID == q.Components[11] {
+				v12s = component.Data.(*slice[T12]).Data
+				continue
+			}
+			if component.ID == q.Components[12] {
+				v13s = component.Data.(*slice[T13]).Data
+				continue
+			}
+			if component.ID == q.Components[13] {
+				v14s = component.Data.(*slice[T14]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+		if v10s == nil && !options.Optional[9] {
+			continue
+		}
+		if v11s == nil && !options.Optional[10] {
+			continue
+		}
+		if v12s == nil && !options.Optional[11] {
+			continue
+		}
+		if v13s == nil && !options.Optional[12] {
+			continue
+		}
+		if v14s == nil && !options.Optional[13] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-				v10s = sliceRemove(v10s, idxRemove[i])
-				v11s = sliceRemove(v11s, idxRemove[i])
-				v12s = sliceRemove(v12s, idxRemove[i])
-				v13s = sliceRemove(v13s, idxRemove[i])
-				v14s = sliceRemove(v14s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-			compound.Values[q.Components[9]] = v10s
-			compound.Values[q.Components[10]] = v11s
-			compound.Values[q.Components[11]] = v12s
-			compound.Values[q.Components[12]] = v13s
-			compound.Values[q.Components[13]] = v14s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx))
 			if *options.Stop {
 				return
@@ -4674,201 +4701,188 @@ func (q *Q15[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
-				continue
-			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
-		}
 		var v10s []T10
-		if q.Components[9] > componentMax || compound.Values[q.Components[9]] == nil {
-			if !options.Optional[9] {
-				continue
-			}
-		} else {
-			v10s = compound.Values[q.Components[9]].([]T10)
-		}
 		var v11s []T11
-		if q.Components[10] > componentMax || compound.Values[q.Components[10]] == nil {
-			if !options.Optional[10] {
-				continue
-			}
-		} else {
-			v11s = compound.Values[q.Components[10]].([]T11)
-		}
 		var v12s []T12
-		if q.Components[11] > componentMax || compound.Values[q.Components[11]] == nil {
-			if !options.Optional[11] {
-				continue
-			}
-		} else {
-			v12s = compound.Values[q.Components[11]].([]T12)
-		}
 		var v13s []T13
-		if q.Components[12] > componentMax || compound.Values[q.Components[12]] == nil {
-			if !options.Optional[12] {
-				continue
-			}
-		} else {
-			v13s = compound.Values[q.Components[12]].([]T13)
-		}
 		var v14s []T14
-		if q.Components[13] > componentMax || compound.Values[q.Components[13]] == nil {
-			if !options.Optional[13] {
-				continue
-			}
-		} else {
-			v14s = compound.Values[q.Components[13]].([]T14)
-		}
 		var v15s []T15
-		if q.Components[14] > componentMax || compound.Values[q.Components[14]] == nil {
-			if !options.Optional[14] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v15s = compound.Values[q.Components[14]].([]T15)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+			if component.ID == q.Components[9] {
+				v10s = component.Data.(*slice[T10]).Data
+				continue
+			}
+			if component.ID == q.Components[10] {
+				v11s = component.Data.(*slice[T11]).Data
+				continue
+			}
+			if component.ID == q.Components[11] {
+				v12s = component.Data.(*slice[T12]).Data
+				continue
+			}
+			if component.ID == q.Components[12] {
+				v13s = component.Data.(*slice[T13]).Data
+				continue
+			}
+			if component.ID == q.Components[13] {
+				v14s = component.Data.(*slice[T14]).Data
+				continue
+			}
+			if component.ID == q.Components[14] {
+				v15s = component.Data.(*slice[T15]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+		if v10s == nil && !options.Optional[9] {
+			continue
+		}
+		if v11s == nil && !options.Optional[10] {
+			continue
+		}
+		if v12s == nil && !options.Optional[11] {
+			continue
+		}
+		if v13s == nil && !options.Optional[12] {
+			continue
+		}
+		if v14s == nil && !options.Optional[13] {
+			continue
+		}
+		if v15s == nil && !options.Optional[14] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-				v10s = sliceRemove(v10s, idxRemove[i])
-				v11s = sliceRemove(v11s, idxRemove[i])
-				v12s = sliceRemove(v12s, idxRemove[i])
-				v13s = sliceRemove(v13s, idxRemove[i])
-				v14s = sliceRemove(v14s, idxRemove[i])
-				v15s = sliceRemove(v15s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-			compound.Values[q.Components[9]] = v10s
-			compound.Values[q.Components[10]] = v11s
-			compound.Values[q.Components[11]] = v12s
-			compound.Values[q.Components[12]] = v13s
-			compound.Values[q.Components[13]] = v14s
-			compound.Values[q.Components[14]] = v15s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx))
 			if *options.Stop {
 				return
@@ -4890,211 +4904,196 @@ func (q *Q16[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
-				continue
-			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
-		}
 		var v10s []T10
-		if q.Components[9] > componentMax || compound.Values[q.Components[9]] == nil {
-			if !options.Optional[9] {
-				continue
-			}
-		} else {
-			v10s = compound.Values[q.Components[9]].([]T10)
-		}
 		var v11s []T11
-		if q.Components[10] > componentMax || compound.Values[q.Components[10]] == nil {
-			if !options.Optional[10] {
-				continue
-			}
-		} else {
-			v11s = compound.Values[q.Components[10]].([]T11)
-		}
 		var v12s []T12
-		if q.Components[11] > componentMax || compound.Values[q.Components[11]] == nil {
-			if !options.Optional[11] {
-				continue
-			}
-		} else {
-			v12s = compound.Values[q.Components[11]].([]T12)
-		}
 		var v13s []T13
-		if q.Components[12] > componentMax || compound.Values[q.Components[12]] == nil {
-			if !options.Optional[12] {
-				continue
-			}
-		} else {
-			v13s = compound.Values[q.Components[12]].([]T13)
-		}
 		var v14s []T14
-		if q.Components[13] > componentMax || compound.Values[q.Components[13]] == nil {
-			if !options.Optional[13] {
-				continue
-			}
-		} else {
-			v14s = compound.Values[q.Components[13]].([]T14)
-		}
 		var v15s []T15
-		if q.Components[14] > componentMax || compound.Values[q.Components[14]] == nil {
-			if !options.Optional[14] {
-				continue
-			}
-		} else {
-			v15s = compound.Values[q.Components[14]].([]T15)
-		}
 		var v16s []T16
-		if q.Components[15] > componentMax || compound.Values[q.Components[15]] == nil {
-			if !options.Optional[15] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v16s = compound.Values[q.Components[15]].([]T16)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+			if component.ID == q.Components[9] {
+				v10s = component.Data.(*slice[T10]).Data
+				continue
+			}
+			if component.ID == q.Components[10] {
+				v11s = component.Data.(*slice[T11]).Data
+				continue
+			}
+			if component.ID == q.Components[11] {
+				v12s = component.Data.(*slice[T12]).Data
+				continue
+			}
+			if component.ID == q.Components[12] {
+				v13s = component.Data.(*slice[T13]).Data
+				continue
+			}
+			if component.ID == q.Components[13] {
+				v14s = component.Data.(*slice[T14]).Data
+				continue
+			}
+			if component.ID == q.Components[14] {
+				v15s = component.Data.(*slice[T15]).Data
+				continue
+			}
+			if component.ID == q.Components[15] {
+				v16s = component.Data.(*slice[T16]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+		if v10s == nil && !options.Optional[9] {
+			continue
+		}
+		if v11s == nil && !options.Optional[10] {
+			continue
+		}
+		if v12s == nil && !options.Optional[11] {
+			continue
+		}
+		if v13s == nil && !options.Optional[12] {
+			continue
+		}
+		if v14s == nil && !options.Optional[13] {
+			continue
+		}
+		if v15s == nil && !options.Optional[14] {
+			continue
+		}
+		if v16s == nil && !options.Optional[15] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-				v10s = sliceRemove(v10s, idxRemove[i])
-				v11s = sliceRemove(v11s, idxRemove[i])
-				v12s = sliceRemove(v12s, idxRemove[i])
-				v13s = sliceRemove(v13s, idxRemove[i])
-				v14s = sliceRemove(v14s, idxRemove[i])
-				v15s = sliceRemove(v15s, idxRemove[i])
-				v16s = sliceRemove(v16s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-			compound.Values[q.Components[9]] = v10s
-			compound.Values[q.Components[10]] = v11s
-			compound.Values[q.Components[11]] = v12s
-			compound.Values[q.Components[12]] = v13s
-			compound.Values[q.Components[13]] = v14s
-			compound.Values[q.Components[14]] = v15s
-			compound.Values[q.Components[15]] = v16s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx))
 			if *options.Stop {
 				return
@@ -5116,221 +5115,204 @@ func (q *Q17[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
-				continue
-			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
-		}
 		var v10s []T10
-		if q.Components[9] > componentMax || compound.Values[q.Components[9]] == nil {
-			if !options.Optional[9] {
-				continue
-			}
-		} else {
-			v10s = compound.Values[q.Components[9]].([]T10)
-		}
 		var v11s []T11
-		if q.Components[10] > componentMax || compound.Values[q.Components[10]] == nil {
-			if !options.Optional[10] {
-				continue
-			}
-		} else {
-			v11s = compound.Values[q.Components[10]].([]T11)
-		}
 		var v12s []T12
-		if q.Components[11] > componentMax || compound.Values[q.Components[11]] == nil {
-			if !options.Optional[11] {
-				continue
-			}
-		} else {
-			v12s = compound.Values[q.Components[11]].([]T12)
-		}
 		var v13s []T13
-		if q.Components[12] > componentMax || compound.Values[q.Components[12]] == nil {
-			if !options.Optional[12] {
-				continue
-			}
-		} else {
-			v13s = compound.Values[q.Components[12]].([]T13)
-		}
 		var v14s []T14
-		if q.Components[13] > componentMax || compound.Values[q.Components[13]] == nil {
-			if !options.Optional[13] {
-				continue
-			}
-		} else {
-			v14s = compound.Values[q.Components[13]].([]T14)
-		}
 		var v15s []T15
-		if q.Components[14] > componentMax || compound.Values[q.Components[14]] == nil {
-			if !options.Optional[14] {
-				continue
-			}
-		} else {
-			v15s = compound.Values[q.Components[14]].([]T15)
-		}
 		var v16s []T16
-		if q.Components[15] > componentMax || compound.Values[q.Components[15]] == nil {
-			if !options.Optional[15] {
-				continue
-			}
-		} else {
-			v16s = compound.Values[q.Components[15]].([]T16)
-		}
 		var v17s []T17
-		if q.Components[16] > componentMax || compound.Values[q.Components[16]] == nil {
-			if !options.Optional[16] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v17s = compound.Values[q.Components[16]].([]T17)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+			if component.ID == q.Components[9] {
+				v10s = component.Data.(*slice[T10]).Data
+				continue
+			}
+			if component.ID == q.Components[10] {
+				v11s = component.Data.(*slice[T11]).Data
+				continue
+			}
+			if component.ID == q.Components[11] {
+				v12s = component.Data.(*slice[T12]).Data
+				continue
+			}
+			if component.ID == q.Components[12] {
+				v13s = component.Data.(*slice[T13]).Data
+				continue
+			}
+			if component.ID == q.Components[13] {
+				v14s = component.Data.(*slice[T14]).Data
+				continue
+			}
+			if component.ID == q.Components[14] {
+				v15s = component.Data.(*slice[T15]).Data
+				continue
+			}
+			if component.ID == q.Components[15] {
+				v16s = component.Data.(*slice[T16]).Data
+				continue
+			}
+			if component.ID == q.Components[16] {
+				v17s = component.Data.(*slice[T17]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+		if v10s == nil && !options.Optional[9] {
+			continue
+		}
+		if v11s == nil && !options.Optional[10] {
+			continue
+		}
+		if v12s == nil && !options.Optional[11] {
+			continue
+		}
+		if v13s == nil && !options.Optional[12] {
+			continue
+		}
+		if v14s == nil && !options.Optional[13] {
+			continue
+		}
+		if v15s == nil && !options.Optional[14] {
+			continue
+		}
+		if v16s == nil && !options.Optional[15] {
+			continue
+		}
+		if v17s == nil && !options.Optional[16] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-				v10s = sliceRemove(v10s, idxRemove[i])
-				v11s = sliceRemove(v11s, idxRemove[i])
-				v12s = sliceRemove(v12s, idxRemove[i])
-				v13s = sliceRemove(v13s, idxRemove[i])
-				v14s = sliceRemove(v14s, idxRemove[i])
-				v15s = sliceRemove(v15s, idxRemove[i])
-				v16s = sliceRemove(v16s, idxRemove[i])
-				v17s = sliceRemove(v17s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-			compound.Values[q.Components[9]] = v10s
-			compound.Values[q.Components[10]] = v11s
-			compound.Values[q.Components[11]] = v12s
-			compound.Values[q.Components[12]] = v13s
-			compound.Values[q.Components[13]] = v14s
-			compound.Values[q.Components[14]] = v15s
-			compound.Values[q.Components[15]] = v16s
-			compound.Values[q.Components[16]] = v17s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx))
 			if *options.Stop {
 				return
@@ -5352,231 +5334,212 @@ func (q *Q18[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
-				continue
-			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
-		}
 		var v10s []T10
-		if q.Components[9] > componentMax || compound.Values[q.Components[9]] == nil {
-			if !options.Optional[9] {
-				continue
-			}
-		} else {
-			v10s = compound.Values[q.Components[9]].([]T10)
-		}
 		var v11s []T11
-		if q.Components[10] > componentMax || compound.Values[q.Components[10]] == nil {
-			if !options.Optional[10] {
-				continue
-			}
-		} else {
-			v11s = compound.Values[q.Components[10]].([]T11)
-		}
 		var v12s []T12
-		if q.Components[11] > componentMax || compound.Values[q.Components[11]] == nil {
-			if !options.Optional[11] {
-				continue
-			}
-		} else {
-			v12s = compound.Values[q.Components[11]].([]T12)
-		}
 		var v13s []T13
-		if q.Components[12] > componentMax || compound.Values[q.Components[12]] == nil {
-			if !options.Optional[12] {
-				continue
-			}
-		} else {
-			v13s = compound.Values[q.Components[12]].([]T13)
-		}
 		var v14s []T14
-		if q.Components[13] > componentMax || compound.Values[q.Components[13]] == nil {
-			if !options.Optional[13] {
-				continue
-			}
-		} else {
-			v14s = compound.Values[q.Components[13]].([]T14)
-		}
 		var v15s []T15
-		if q.Components[14] > componentMax || compound.Values[q.Components[14]] == nil {
-			if !options.Optional[14] {
-				continue
-			}
-		} else {
-			v15s = compound.Values[q.Components[14]].([]T15)
-		}
 		var v16s []T16
-		if q.Components[15] > componentMax || compound.Values[q.Components[15]] == nil {
-			if !options.Optional[15] {
-				continue
-			}
-		} else {
-			v16s = compound.Values[q.Components[15]].([]T16)
-		}
 		var v17s []T17
-		if q.Components[16] > componentMax || compound.Values[q.Components[16]] == nil {
-			if !options.Optional[16] {
-				continue
-			}
-		} else {
-			v17s = compound.Values[q.Components[16]].([]T17)
-		}
 		var v18s []T18
-		if q.Components[17] > componentMax || compound.Values[q.Components[17]] == nil {
-			if !options.Optional[17] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v18s = compound.Values[q.Components[17]].([]T18)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+			if component.ID == q.Components[9] {
+				v10s = component.Data.(*slice[T10]).Data
+				continue
+			}
+			if component.ID == q.Components[10] {
+				v11s = component.Data.(*slice[T11]).Data
+				continue
+			}
+			if component.ID == q.Components[11] {
+				v12s = component.Data.(*slice[T12]).Data
+				continue
+			}
+			if component.ID == q.Components[12] {
+				v13s = component.Data.(*slice[T13]).Data
+				continue
+			}
+			if component.ID == q.Components[13] {
+				v14s = component.Data.(*slice[T14]).Data
+				continue
+			}
+			if component.ID == q.Components[14] {
+				v15s = component.Data.(*slice[T15]).Data
+				continue
+			}
+			if component.ID == q.Components[15] {
+				v16s = component.Data.(*slice[T16]).Data
+				continue
+			}
+			if component.ID == q.Components[16] {
+				v17s = component.Data.(*slice[T17]).Data
+				continue
+			}
+			if component.ID == q.Components[17] {
+				v18s = component.Data.(*slice[T18]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+		if v10s == nil && !options.Optional[9] {
+			continue
+		}
+		if v11s == nil && !options.Optional[10] {
+			continue
+		}
+		if v12s == nil && !options.Optional[11] {
+			continue
+		}
+		if v13s == nil && !options.Optional[12] {
+			continue
+		}
+		if v14s == nil && !options.Optional[13] {
+			continue
+		}
+		if v15s == nil && !options.Optional[14] {
+			continue
+		}
+		if v16s == nil && !options.Optional[15] {
+			continue
+		}
+		if v17s == nil && !options.Optional[16] {
+			continue
+		}
+		if v18s == nil && !options.Optional[17] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx), getOptional(v18s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx), getOptional(v18s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-				v10s = sliceRemove(v10s, idxRemove[i])
-				v11s = sliceRemove(v11s, idxRemove[i])
-				v12s = sliceRemove(v12s, idxRemove[i])
-				v13s = sliceRemove(v13s, idxRemove[i])
-				v14s = sliceRemove(v14s, idxRemove[i])
-				v15s = sliceRemove(v15s, idxRemove[i])
-				v16s = sliceRemove(v16s, idxRemove[i])
-				v17s = sliceRemove(v17s, idxRemove[i])
-				v18s = sliceRemove(v18s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-			compound.Values[q.Components[9]] = v10s
-			compound.Values[q.Components[10]] = v11s
-			compound.Values[q.Components[11]] = v12s
-			compound.Values[q.Components[12]] = v13s
-			compound.Values[q.Components[13]] = v14s
-			compound.Values[q.Components[14]] = v15s
-			compound.Values[q.Components[15]] = v16s
-			compound.Values[q.Components[16]] = v17s
-			compound.Values[q.Components[17]] = v18s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx), getOptional(v18s, idx))
 			if *options.Stop {
 				return
@@ -5598,241 +5561,220 @@ func (q *Q19[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
-				continue
-			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
-		}
 		var v10s []T10
-		if q.Components[9] > componentMax || compound.Values[q.Components[9]] == nil {
-			if !options.Optional[9] {
-				continue
-			}
-		} else {
-			v10s = compound.Values[q.Components[9]].([]T10)
-		}
 		var v11s []T11
-		if q.Components[10] > componentMax || compound.Values[q.Components[10]] == nil {
-			if !options.Optional[10] {
-				continue
-			}
-		} else {
-			v11s = compound.Values[q.Components[10]].([]T11)
-		}
 		var v12s []T12
-		if q.Components[11] > componentMax || compound.Values[q.Components[11]] == nil {
-			if !options.Optional[11] {
-				continue
-			}
-		} else {
-			v12s = compound.Values[q.Components[11]].([]T12)
-		}
 		var v13s []T13
-		if q.Components[12] > componentMax || compound.Values[q.Components[12]] == nil {
-			if !options.Optional[12] {
-				continue
-			}
-		} else {
-			v13s = compound.Values[q.Components[12]].([]T13)
-		}
 		var v14s []T14
-		if q.Components[13] > componentMax || compound.Values[q.Components[13]] == nil {
-			if !options.Optional[13] {
-				continue
-			}
-		} else {
-			v14s = compound.Values[q.Components[13]].([]T14)
-		}
 		var v15s []T15
-		if q.Components[14] > componentMax || compound.Values[q.Components[14]] == nil {
-			if !options.Optional[14] {
-				continue
-			}
-		} else {
-			v15s = compound.Values[q.Components[14]].([]T15)
-		}
 		var v16s []T16
-		if q.Components[15] > componentMax || compound.Values[q.Components[15]] == nil {
-			if !options.Optional[15] {
-				continue
-			}
-		} else {
-			v16s = compound.Values[q.Components[15]].([]T16)
-		}
 		var v17s []T17
-		if q.Components[16] > componentMax || compound.Values[q.Components[16]] == nil {
-			if !options.Optional[16] {
-				continue
-			}
-		} else {
-			v17s = compound.Values[q.Components[16]].([]T17)
-		}
 		var v18s []T18
-		if q.Components[17] > componentMax || compound.Values[q.Components[17]] == nil {
-			if !options.Optional[17] {
-				continue
-			}
-		} else {
-			v18s = compound.Values[q.Components[17]].([]T18)
-		}
 		var v19s []T19
-		if q.Components[18] > componentMax || compound.Values[q.Components[18]] == nil {
-			if !options.Optional[18] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v19s = compound.Values[q.Components[18]].([]T19)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+			if component.ID == q.Components[9] {
+				v10s = component.Data.(*slice[T10]).Data
+				continue
+			}
+			if component.ID == q.Components[10] {
+				v11s = component.Data.(*slice[T11]).Data
+				continue
+			}
+			if component.ID == q.Components[11] {
+				v12s = component.Data.(*slice[T12]).Data
+				continue
+			}
+			if component.ID == q.Components[12] {
+				v13s = component.Data.(*slice[T13]).Data
+				continue
+			}
+			if component.ID == q.Components[13] {
+				v14s = component.Data.(*slice[T14]).Data
+				continue
+			}
+			if component.ID == q.Components[14] {
+				v15s = component.Data.(*slice[T15]).Data
+				continue
+			}
+			if component.ID == q.Components[15] {
+				v16s = component.Data.(*slice[T16]).Data
+				continue
+			}
+			if component.ID == q.Components[16] {
+				v17s = component.Data.(*slice[T17]).Data
+				continue
+			}
+			if component.ID == q.Components[17] {
+				v18s = component.Data.(*slice[T18]).Data
+				continue
+			}
+			if component.ID == q.Components[18] {
+				v19s = component.Data.(*slice[T19]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+		if v10s == nil && !options.Optional[9] {
+			continue
+		}
+		if v11s == nil && !options.Optional[10] {
+			continue
+		}
+		if v12s == nil && !options.Optional[11] {
+			continue
+		}
+		if v13s == nil && !options.Optional[12] {
+			continue
+		}
+		if v14s == nil && !options.Optional[13] {
+			continue
+		}
+		if v15s == nil && !options.Optional[14] {
+			continue
+		}
+		if v16s == nil && !options.Optional[15] {
+			continue
+		}
+		if v17s == nil && !options.Optional[16] {
+			continue
+		}
+		if v18s == nil && !options.Optional[17] {
+			continue
+		}
+		if v19s == nil && !options.Optional[18] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx), getOptional(v18s, idx), getOptional(v19s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx), getOptional(v18s, idx), getOptional(v19s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-				v10s = sliceRemove(v10s, idxRemove[i])
-				v11s = sliceRemove(v11s, idxRemove[i])
-				v12s = sliceRemove(v12s, idxRemove[i])
-				v13s = sliceRemove(v13s, idxRemove[i])
-				v14s = sliceRemove(v14s, idxRemove[i])
-				v15s = sliceRemove(v15s, idxRemove[i])
-				v16s = sliceRemove(v16s, idxRemove[i])
-				v17s = sliceRemove(v17s, idxRemove[i])
-				v18s = sliceRemove(v18s, idxRemove[i])
-				v19s = sliceRemove(v19s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-			compound.Values[q.Components[9]] = v10s
-			compound.Values[q.Components[10]] = v11s
-			compound.Values[q.Components[11]] = v12s
-			compound.Values[q.Components[12]] = v13s
-			compound.Values[q.Components[13]] = v14s
-			compound.Values[q.Components[14]] = v15s
-			compound.Values[q.Components[15]] = v16s
-			compound.Values[q.Components[16]] = v17s
-			compound.Values[q.Components[17]] = v18s
-			compound.Values[q.Components[18]] = v19s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx), getOptional(v18s, idx), getOptional(v19s, idx))
 			if *options.Stop {
 				return
@@ -5854,251 +5796,228 @@ func (q *Q20[ID, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
-	for compoundIdx, compound := range q.storage.Compounds {
-		if options.Hash != nil {
-			if i, ok := sliceFind(compound.Components, options.Hash.ID); ok {
-				if compound.Hashes[i] != options.Hash.Hash {
-					continue
-				}
-			} else {
-				continue
-			}
-		}
-		componentMax := len(compound.Values) - 1
+LOOP:
+	for id, compound := range q.storage.Compounds {
 		var v1s []T1
-		if q.Components[0] > componentMax || compound.Values[q.Components[0]] == nil {
-			if !options.Optional[0] {
-				continue
-			}
-		} else {
-			v1s = compound.Values[q.Components[0]].([]T1)
-		}
 		var v2s []T2
-		if q.Components[1] > componentMax || compound.Values[q.Components[1]] == nil {
-			if !options.Optional[1] {
-				continue
-			}
-		} else {
-			v2s = compound.Values[q.Components[1]].([]T2)
-		}
 		var v3s []T3
-		if q.Components[2] > componentMax || compound.Values[q.Components[2]] == nil {
-			if !options.Optional[2] {
-				continue
-			}
-		} else {
-			v3s = compound.Values[q.Components[2]].([]T3)
-		}
 		var v4s []T4
-		if q.Components[3] > componentMax || compound.Values[q.Components[3]] == nil {
-			if !options.Optional[3] {
-				continue
-			}
-		} else {
-			v4s = compound.Values[q.Components[3]].([]T4)
-		}
 		var v5s []T5
-		if q.Components[4] > componentMax || compound.Values[q.Components[4]] == nil {
-			if !options.Optional[4] {
-				continue
-			}
-		} else {
-			v5s = compound.Values[q.Components[4]].([]T5)
-		}
 		var v6s []T6
-		if q.Components[5] > componentMax || compound.Values[q.Components[5]] == nil {
-			if !options.Optional[5] {
-				continue
-			}
-		} else {
-			v6s = compound.Values[q.Components[5]].([]T6)
-		}
 		var v7s []T7
-		if q.Components[6] > componentMax || compound.Values[q.Components[6]] == nil {
-			if !options.Optional[6] {
-				continue
-			}
-		} else {
-			v7s = compound.Values[q.Components[6]].([]T7)
-		}
 		var v8s []T8
-		if q.Components[7] > componentMax || compound.Values[q.Components[7]] == nil {
-			if !options.Optional[7] {
-				continue
-			}
-		} else {
-			v8s = compound.Values[q.Components[7]].([]T8)
-		}
 		var v9s []T9
-		if q.Components[8] > componentMax || compound.Values[q.Components[8]] == nil {
-			if !options.Optional[8] {
-				continue
-			}
-		} else {
-			v9s = compound.Values[q.Components[8]].([]T9)
-		}
 		var v10s []T10
-		if q.Components[9] > componentMax || compound.Values[q.Components[9]] == nil {
-			if !options.Optional[9] {
-				continue
-			}
-		} else {
-			v10s = compound.Values[q.Components[9]].([]T10)
-		}
 		var v11s []T11
-		if q.Components[10] > componentMax || compound.Values[q.Components[10]] == nil {
-			if !options.Optional[10] {
-				continue
-			}
-		} else {
-			v11s = compound.Values[q.Components[10]].([]T11)
-		}
 		var v12s []T12
-		if q.Components[11] > componentMax || compound.Values[q.Components[11]] == nil {
-			if !options.Optional[11] {
-				continue
-			}
-		} else {
-			v12s = compound.Values[q.Components[11]].([]T12)
-		}
 		var v13s []T13
-		if q.Components[12] > componentMax || compound.Values[q.Components[12]] == nil {
-			if !options.Optional[12] {
-				continue
-			}
-		} else {
-			v13s = compound.Values[q.Components[12]].([]T13)
-		}
 		var v14s []T14
-		if q.Components[13] > componentMax || compound.Values[q.Components[13]] == nil {
-			if !options.Optional[13] {
-				continue
-			}
-		} else {
-			v14s = compound.Values[q.Components[13]].([]T14)
-		}
 		var v15s []T15
-		if q.Components[14] > componentMax || compound.Values[q.Components[14]] == nil {
-			if !options.Optional[14] {
-				continue
-			}
-		} else {
-			v15s = compound.Values[q.Components[14]].([]T15)
-		}
 		var v16s []T16
-		if q.Components[15] > componentMax || compound.Values[q.Components[15]] == nil {
-			if !options.Optional[15] {
-				continue
-			}
-		} else {
-			v16s = compound.Values[q.Components[15]].([]T16)
-		}
 		var v17s []T17
-		if q.Components[16] > componentMax || compound.Values[q.Components[16]] == nil {
-			if !options.Optional[16] {
-				continue
-			}
-		} else {
-			v17s = compound.Values[q.Components[16]].([]T17)
-		}
 		var v18s []T18
-		if q.Components[17] > componentMax || compound.Values[q.Components[17]] == nil {
-			if !options.Optional[17] {
-				continue
-			}
-		} else {
-			v18s = compound.Values[q.Components[17]].([]T18)
-		}
 		var v19s []T19
-		if q.Components[18] > componentMax || compound.Values[q.Components[18]] == nil {
-			if !options.Optional[18] {
-				continue
-			}
-		} else {
-			v19s = compound.Values[q.Components[18]].([]T19)
-		}
 		var v20s []T20
-		if q.Components[19] > componentMax || compound.Values[q.Components[19]] == nil {
-			if !options.Optional[19] {
+
+		for _, component := range compound.Components {
+			if options.Hash != nil && component.ID == options.Hash.ID && component.Hash != options.Hash.Hash {
+				continue LOOP
+			}
+			if component.ID == q.Components[0] {
+				v1s = component.Data.(*slice[T1]).Data
 				continue
 			}
-		} else {
-			v20s = compound.Values[q.Components[19]].([]T20)
+			if component.ID == q.Components[1] {
+				v2s = component.Data.(*slice[T2]).Data
+				continue
+			}
+			if component.ID == q.Components[2] {
+				v3s = component.Data.(*slice[T3]).Data
+				continue
+			}
+			if component.ID == q.Components[3] {
+				v4s = component.Data.(*slice[T4]).Data
+				continue
+			}
+			if component.ID == q.Components[4] {
+				v5s = component.Data.(*slice[T5]).Data
+				continue
+			}
+			if component.ID == q.Components[5] {
+				v6s = component.Data.(*slice[T6]).Data
+				continue
+			}
+			if component.ID == q.Components[6] {
+				v7s = component.Data.(*slice[T7]).Data
+				continue
+			}
+			if component.ID == q.Components[7] {
+				v8s = component.Data.(*slice[T8]).Data
+				continue
+			}
+			if component.ID == q.Components[8] {
+				v9s = component.Data.(*slice[T9]).Data
+				continue
+			}
+			if component.ID == q.Components[9] {
+				v10s = component.Data.(*slice[T10]).Data
+				continue
+			}
+			if component.ID == q.Components[10] {
+				v11s = component.Data.(*slice[T11]).Data
+				continue
+			}
+			if component.ID == q.Components[11] {
+				v12s = component.Data.(*slice[T12]).Data
+				continue
+			}
+			if component.ID == q.Components[12] {
+				v13s = component.Data.(*slice[T13]).Data
+				continue
+			}
+			if component.ID == q.Components[13] {
+				v14s = component.Data.(*slice[T14]).Data
+				continue
+			}
+			if component.ID == q.Components[14] {
+				v15s = component.Data.(*slice[T15]).Data
+				continue
+			}
+			if component.ID == q.Components[15] {
+				v16s = component.Data.(*slice[T16]).Data
+				continue
+			}
+			if component.ID == q.Components[16] {
+				v17s = component.Data.(*slice[T17]).Data
+				continue
+			}
+			if component.ID == q.Components[17] {
+				v18s = component.Data.(*slice[T18]).Data
+				continue
+			}
+			if component.ID == q.Components[18] {
+				v19s = component.Data.(*slice[T19]).Data
+				continue
+			}
+			if component.ID == q.Components[19] {
+				v20s = component.Data.(*slice[T20]).Data
+				continue
+			}
+
 		}
-		// If it has removed items, also flush them
-		if compound.Removed != nil {
-			count := len(compound.Removed)
-			if len(compound.IDs) == count { // Compound is empty, throw away
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, compoundIdx)
+		if v1s == nil && !options.Optional[0] {
+			continue
+		}
+		if v2s == nil && !options.Optional[1] {
+			continue
+		}
+		if v3s == nil && !options.Optional[2] {
+			continue
+		}
+		if v4s == nil && !options.Optional[3] {
+			continue
+		}
+		if v5s == nil && !options.Optional[4] {
+			continue
+		}
+		if v6s == nil && !options.Optional[5] {
+			continue
+		}
+		if v7s == nil && !options.Optional[6] {
+			continue
+		}
+		if v8s == nil && !options.Optional[7] {
+			continue
+		}
+		if v9s == nil && !options.Optional[8] {
+			continue
+		}
+		if v10s == nil && !options.Optional[9] {
+			continue
+		}
+		if v11s == nil && !options.Optional[10] {
+			continue
+		}
+		if v12s == nil && !options.Optional[11] {
+			continue
+		}
+		if v13s == nil && !options.Optional[12] {
+			continue
+		}
+		if v14s == nil && !options.Optional[13] {
+			continue
+		}
+		if v15s == nil && !options.Optional[14] {
+			continue
+		}
+		if v16s == nil && !options.Optional[15] {
+			continue
+		}
+		if v17s == nil && !options.Optional[16] {
+			continue
+		}
+		if v18s == nil && !options.Optional[17] {
+			continue
+		}
+		if v19s == nil && !options.Optional[18] {
+			continue
+		}
+		if v20s == nil && !options.Optional[19] {
+			continue
+		}
+
+		if compound.EntitysRemoved != nil {
+			total := len(compound.EntitysRemoved)
+			if total == len(compound.Entitys) {
+				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
 				continue
 			}
-			idxRemove := make([]int, count)
-			skip, skipped := compound.Removed[0], 0
-			for idx, id := range compound.IDs {
-				if id == skip {
-					idxRemove[skipped] = idx
-					if skipped < count-1 {
-						skipped++
-						skip = compound.Removed[skipped]
+			skipID, skipCount := compound.EntitysRemoved[0], 0
+			if !compound.cleanupTime.Swap(true) {
+				idxRemove := make([]int, total)
+				for idx, id := range compound.Entitys {
+					if id == skipID {
+						idxRemove[skipCount] = idx
+						skipCount++
+						if skipCount < total {
+							skipID = compound.EntitysRemoved[skipCount]
+						}
+						continue
+					}
+					fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx), getOptional(v18s, idx), getOptional(v19s, idx), getOptional(v20s, idx))
+					if *options.Stop {
+						return
+					}
+				}
+				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
+				for i := len(idxRemove) - 1; i >= 0; i-- {
+					idx := idxRemove[i]
+					compound.Entitys = sliceRemove(compound.Entitys, idx)
+					for _, component := range compound.Components {
+						component.Data.remove(idx)
+					}
+				}
+				compound.EntitysRemoved = nil
+				compound.cleanupTime.Store(false)
+				continue
+			}
+			for idx, id := range compound.Entitys {
+				if id == skipID {
+					skipCount++
+					if skipCount < total {
+						skipID = compound.EntitysRemoved[skipCount]
 					}
 					continue
 				}
-
 				fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx), getOptional(v18s, idx), getOptional(v19s, idx), getOptional(v20s, idx))
 				if *options.Stop {
 					return
 				}
 			}
-			// Remove items and flush
-			for i := len(idxRemove) - 1; i >= 0; i-- {
-				compound.IDs = sliceRemove(compound.IDs, idxRemove[i])
-				v1s = sliceRemove(v1s, idxRemove[i])
-				v2s = sliceRemove(v2s, idxRemove[i])
-				v3s = sliceRemove(v3s, idxRemove[i])
-				v4s = sliceRemove(v4s, idxRemove[i])
-				v5s = sliceRemove(v5s, idxRemove[i])
-				v6s = sliceRemove(v6s, idxRemove[i])
-				v7s = sliceRemove(v7s, idxRemove[i])
-				v8s = sliceRemove(v8s, idxRemove[i])
-				v9s = sliceRemove(v9s, idxRemove[i])
-				v10s = sliceRemove(v10s, idxRemove[i])
-				v11s = sliceRemove(v11s, idxRemove[i])
-				v12s = sliceRemove(v12s, idxRemove[i])
-				v13s = sliceRemove(v13s, idxRemove[i])
-				v14s = sliceRemove(v14s, idxRemove[i])
-				v15s = sliceRemove(v15s, idxRemove[i])
-				v16s = sliceRemove(v16s, idxRemove[i])
-				v17s = sliceRemove(v17s, idxRemove[i])
-				v18s = sliceRemove(v18s, idxRemove[i])
-				v19s = sliceRemove(v19s, idxRemove[i])
-				v20s = sliceRemove(v20s, idxRemove[i])
-			}
-			compound.Values[q.Components[0]] = v1s
-			compound.Values[q.Components[1]] = v2s
-			compound.Values[q.Components[2]] = v3s
-			compound.Values[q.Components[3]] = v4s
-			compound.Values[q.Components[4]] = v5s
-			compound.Values[q.Components[5]] = v6s
-			compound.Values[q.Components[6]] = v7s
-			compound.Values[q.Components[7]] = v8s
-			compound.Values[q.Components[8]] = v9s
-			compound.Values[q.Components[9]] = v10s
-			compound.Values[q.Components[10]] = v11s
-			compound.Values[q.Components[11]] = v12s
-			compound.Values[q.Components[12]] = v13s
-			compound.Values[q.Components[13]] = v14s
-			compound.Values[q.Components[14]] = v15s
-			compound.Values[q.Components[15]] = v16s
-			compound.Values[q.Components[16]] = v17s
-			compound.Values[q.Components[17]] = v18s
-			compound.Values[q.Components[18]] = v19s
-			compound.Values[q.Components[19]] = v20s
-
-			compound.Removed = nil
 			continue
 		}
-		// Normal loop
-		for idx, id := range compound.IDs {
+		// Loop
+		for idx, id := range compound.Entitys {
 			fn(id, getOptional(v1s, idx), getOptional(v2s, idx), getOptional(v3s, idx), getOptional(v4s, idx), getOptional(v5s, idx), getOptional(v6s, idx), getOptional(v7s, idx), getOptional(v8s, idx), getOptional(v9s, idx), getOptional(v10s, idx), getOptional(v11s, idx), getOptional(v12s, idx), getOptional(v13s, idx), getOptional(v14s, idx), getOptional(v15s, idx), getOptional(v16s, idx), getOptional(v17s, idx), getOptional(v18s, idx), getOptional(v19s, idx), getOptional(v20s, idx))
 			if *options.Stop {
 				return

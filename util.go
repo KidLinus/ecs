@@ -25,11 +25,11 @@ CompoundLoop:
 		}
 	EqualityLoop:
 		for ai, av := range components {
-			for bi, bv := range v.Components {
-				if av != bv {
+			for _, b := range v.Components {
+				if av != b.ID {
 					continue
 				}
-				if hashes[ai] != v.Hashes[bi] {
+				if hashes[ai] != b.Hash {
 					continue CompoundLoop
 				}
 				continue EqualityLoop
@@ -38,7 +38,11 @@ CompoundLoop:
 		}
 		return idx
 	}
-	storage.Compounds = append(storage.Compounds, &Compound[ID]{Components: components, Hashes: hashes})
+	var cmps []CompoundComponent
+	for idx, component := range components {
+		cmps = append(cmps, CompoundComponent{ID: component, Hash: hashes[idx]})
+	}
+	storage.Compounds = append(storage.Compounds, &Compound[ID]{Components: cmps})
 	return len(storage.Compounds) - 1
 }
 
