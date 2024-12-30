@@ -53,6 +53,8 @@ func main() {
 }
 
 // func Set1[ID Int, T1 any](storage *Storage[ID], id ID, v1 T1) {
+//  storage.lock.Lock()
+//  defer storage.lock.Unlock()
 // 	components := []int{storage.componentEnsure(v1)}
 // 	hashes := []int{componentHash(v1)}
 // 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
@@ -83,6 +85,8 @@ func buildSetFunc(buffer *bytes.Buffer, depth int) {
 	}
 	buffer.WriteString(fmt.Sprintf(`
 func Set%d[ID Int%s any](storage *Storage[ID], id ID%s) {
+	storage.lock.Lock()
+	defer storage.lock.Unlock()
 	components := []int{%s}
 	hashes := []int{%s}
 	entity := Entity{Compound: storage.compoundEnsure(components, hashes)}
@@ -117,6 +121,7 @@ func buildQueryFunc(buffer *bytes.Buffer, depth int) {
 		genericReturn += fmt.Sprintf(",T%d", i)
 	}
 	buffer.WriteString(fmt.Sprintf("func Query%d[%s ID Int](storage *Storage[ID]) *Q%d[ID%s]{\n", depth, genericParams, depth, genericReturn))
+	buffer.WriteString("storage.lock.RLock()\ndefer storage.lock.RUnlock()\n")
 	buffer.WriteString(fmt.Sprintf("q := &Q%d[ID%s]{storage: storage}\n", depth, genericReturn))
 	for i := 1; i <= depth; i++ {
 		buffer.WriteString(fmt.Sprintf(`{
@@ -145,6 +150,8 @@ func buildQueryFunc(buffer *bytes.Buffer, depth int) {
 // 		options.Stop = new(bool)
 // 	}
 // 	// Filter and run compounds
+// 	var compoundCleanup []int
+// 	q.storage.lock.RLock()
 // LOOP:
 // 	for id, compound := range q.storage.Compounds {
 // 		var v1s []T1
@@ -164,51 +171,20 @@ func buildQueryFunc(buffer *bytes.Buffer, depth int) {
 // 		}
 
 // 		if compound.EntitysRemoved != nil {
-// 			total := len(compound.EntitysRemoved)
-// 			if total == len(compound.Entitys) {
-// 				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
-// 				continue
-// 			}
-// 			skipID, skipCount := compound.EntitysRemoved[0], 0
 // 			if !compound.cleanupTime.Swap(true) {
-// 				idxRemove := make([]int, total)
-// 				for idx, id := range compound.Entitys {
-// 					if id == skipID {
-// 						idxRemove[skipCount] = idx
-// 						skipCount++
-// 						if skipCount < total {
-// 							skipID = compound.EntitysRemoved[skipCount]
-// 						}
-// 						continue
-// 					}
-// 					fn(id, getOptional(v1s, idx))
-// 					if *options.Stop {
-// 						return
-// 					}
-// 				}
-// 				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
-// 				for i := len(idxRemove) - 1; i >= 0; i-- {
-// 					idx := idxRemove[i]
-// 					compound.Entitys = sliceRemove(compound.Entitys, idx)
-// 					for _, component := range compound.Components {
-// 						component.Data.remove(idx)
-// 					}
-// 				}
-// 				compound.EntitysRemoved = nil
-// 				compound.cleanupTime.Store(false)
-// 				continue
+// 				compoundCleanup = append(compoundCleanup, id)
+// 				continue LOOP
 // 			}
+// 			loopEach:
 // 			for idx, id := range compound.Entitys {
-// 				if id == skipID {
-// 					skipCount++
-// 					if skipCount < total {
-// 						skipID = compound.EntitysRemoved[skipCount]
+// 				for _, r := range compound.EntitysRemoved {
+// 					if r == id {
+// 						continue loopEach
 // 					}
-// 					continue
 // 				}
 // 				fn(id, getOptional(v1s, idx))
 // 				if *options.Stop {
-// 					return
+// 					break LOOP
 // 				}
 // 			}
 // 			continue
@@ -217,10 +193,64 @@ func buildQueryFunc(buffer *bytes.Buffer, depth int) {
 // 		for idx, id := range compound.Entitys {
 // 			fn(id, getOptional(v1s, idx))
 // 			if *options.Stop {
-// 				return
+// 				// q.storage.lock.RUnlock()
+// 				break LOOP
 // 			}
 // 		}
 // 	}
+// 	q.storage.lock.RUnlock()
+// 	if compoundCleanup == nil {
+// 		return
+// 	}
+// 	// Run cleanups
+// 	q.storage.lock.Lock()
+// 	for _, id := range compoundCleanup {
+// 		compound := q.storage.Compounds[id]
+// 		// Abort if we're not going to run the data
+// 		if *options.Stop {
+// 			continue
+// 		}
+// 		// Select components
+// 		var v1s []T1
+
+// 		for _, component := range compound.Components {
+// 			if component.ID == q.Components[0] {
+// 				v1s = component.Data.(*slice[T1]).Data
+// 				continue
+// 			}
+
+// 		}
+// 		// Run data
+// 		idxRemove := make([]int,0, len(compound.EntitysRemoved))
+// 		loopRemove:
+// 		for idx, id := range compound.Entitys {
+// 			for rIdx, r := range compound.EntitysRemoved {
+// 				if r == id {
+// 					idxRemove = append(idxRemove, idx)
+// 					compound.EntitysRemoved = sliceRemove(compound.EntitysRemoved, rIdx)
+// 					continue loopRemove
+// 				}
+// 			}
+// 			fn(id, getOptional(v1s, idx))
+// 			if *options.Stop {
+// 				continue
+// 			}
+// 		}
+// 		// Cleanup
+// 		for i := len(idxRemove) - 1; i >= 0; i-- {
+// 			idx := idxRemove[i]
+// 			compound.Entitys = sliceRemove(compound.Entitys, idx)
+// 			for _, component := range compound.Components {
+// 				component.Data.remove(idx)
+// 			}
+// 		}
+// 		compound.EntitysRemoved = nil
+// 	}
+// 	for _, id := range compoundCleanup {
+// 		compound := q.storage.Compounds[id]
+// 		compound.cleanupTime.Store(false)
+// 	}
+// 	q.storage.lock.Unlock()
 // }
 
 func buildQueryEachFunc(buffer *bytes.Buffer, depth int) {
@@ -238,8 +268,8 @@ func buildQueryEachFunc(buffer *bytes.Buffer, depth int) {
 		sliceOptionalChecks += fmt.Sprintf("if v%ds == nil && !options.Optional[%d] {\ncontinue\n}\n", i, i-1)
 		optionals += fmt.Sprintf(", getOptional(v%ds, idx)", i)
 	}
-	buffer.WriteString(fmt.Sprintf(`
-func (q *Q%d[ID%s]) Each(fn func(ID%s), queryOptions ...Q%dOption) {
+	// optionals
+	buffer.WriteString(fmt.Sprintf(`func (q *Q%d[ID%s]) Each(fn func(ID%s), queryOptions ...Q%dOption) {
 	// Skip if there is an error
 	if q.Errors != nil {
 		return
@@ -252,6 +282,8 @@ func (q *Q%d[ID%s]) Each(fn func(ID%s), queryOptions ...Q%dOption) {
 		options.Stop = new(bool)
 	}
 	// Filter and run compounds
+	var compoundCleanup []int
+	q.storage.lock.RLock()
 LOOP:
 	for id, compound := range q.storage.Compounds {
 		%s
@@ -263,51 +295,20 @@ LOOP:
 		}
 		%s
 		if compound.EntitysRemoved != nil {
-			total := len(compound.EntitysRemoved)
-			if total == len(compound.Entitys) {
-				q.storage.Compounds = sliceRemove(q.storage.Compounds, id)
-				continue
-			}
-			skipID, skipCount := compound.EntitysRemoved[0], 0
 			if !compound.cleanupTime.Swap(true) {
-				idxRemove := make([]int, total)
-				for idx, id := range compound.Entitys {
-					if id == skipID {
-						idxRemove[skipCount] = idx
-						skipCount++
-						if skipCount < total {
-							skipID = compound.EntitysRemoved[skipCount]
-						}
-						continue
-					}
-					fn(id%s)
-					if *options.Stop {
-						return
-					}
-				}
-				// Remove multiple indexes needs to be done in reverse so we don't mess up the indexes
-				for i := len(idxRemove) - 1; i >= 0; i-- {
-					idx := idxRemove[i]
-					compound.Entitys = sliceRemove(compound.Entitys, idx)
-					for _, component := range compound.Components {
-						component.Data.remove(idx)
-					}
-				}
-				compound.EntitysRemoved = nil
-				compound.cleanupTime.Store(false)
-				continue
+				compoundCleanup = append(compoundCleanup, id)
+				continue LOOP
 			}
+			loopEach:
 			for idx, id := range compound.Entitys {
-				if id == skipID {
-					skipCount++
-					if skipCount < total {
-						skipID = compound.EntitysRemoved[skipCount]
+				for _, r := range compound.EntitysRemoved {
+					if r == id {
+						continue loopEach
 					}
-					continue
 				}
 				fn(id%s)
 				if *options.Stop {
-					return
+					break LOOP
 				}
 			}
 			continue
@@ -316,10 +317,59 @@ LOOP:
 		for idx, id := range compound.Entitys {
 			fn(id%s)
 			if *options.Stop {
-				return
+				break LOOP
 			}
 		}
 	}
+	q.storage.lock.RUnlock()
+	if compoundCleanup == nil {
+		return
+	}
+	// Run cleanups
+	q.storage.lock.Lock()
+	for _, id := range compoundCleanup {
+		compound := q.storage.Compounds[id]
+		// Abort if we're not going to run the data
+		if *options.Stop {
+			continue
+		}
+		// Select components
+		%s
+		for _, component := range compound.Components {
+			%s
+		}
+		// Run data
+		idxRemove := make([]int,0, len(compound.EntitysRemoved))
+		loopRemove:
+		for idx, id := range compound.Entitys {
+			for rIdx, r := range compound.EntitysRemoved {
+				if r == id {
+					idxRemove = append(idxRemove, idx)
+					compound.EntitysRemoved = sliceRemove(compound.EntitysRemoved, rIdx)
+					continue loopRemove
+				}
+			}
+			fn(id%s)
+			if *options.Stop {
+				continue
+			}
+		}
+		// Cleanup
+		for i := len(idxRemove) - 1; i >= 0; i-- {
+			idx := idxRemove[i]
+			compound.Entitys = sliceRemove(compound.Entitys, idx)
+			for _, component := range compound.Components {
+				component.Data.remove(idx)
+			}
+		}
+		compound.EntitysRemoved = nil
+	}
+	for _, id := range compoundCleanup {
+		compound := q.storage.Compounds[id]
+		compound.cleanupTime.Store(false)
+	}
+	q.storage.lock.Unlock()
 }
-`, depth, genericReturn, genericParams, depth, depth, sliceConstructors, sliceSelectors, sliceOptionalChecks, optionals, optionals, optionals))
+`, depth, genericReturn, genericParams, depth, depth, sliceConstructors, sliceSelectors, sliceOptionalChecks, optionals, optionals,
+		sliceConstructors, sliceSelectors, optionals))
 }

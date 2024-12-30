@@ -1,17 +1,18 @@
 package ecs
 
 import (
-	"log"
+	"sync"
 	"sync/atomic"
 )
 
 //go:generate go run ./cmd/generate/main.go -depth 20
 
 type Int interface {
-	~uint8 | ~uint16 | ~uint32 | ~uint64 | ~int8 | ~int16 | ~int32 | ~int64
+	int | uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~int8 | ~int16 | ~int32 | ~int64
 }
 
 type Storage[ID Int] struct {
+	lock       sync.RWMutex
 	Entitys    map[ID]Entity
 	Components []Component
 	Compounds  []*Compound[ID]
@@ -47,6 +48,8 @@ func New[ID Int]() *Storage[ID] {
 }
 
 func ComponentLookup[T any, ID Int](storage *Storage[ID]) (int, bool) {
+	storage.lock.RLock()
+	defer storage.lock.RUnlock()
 	name := typeName[T]()
 	for id, cmp := range storage.Components {
 		if cmp.Name == name {
@@ -54,34 +57,4 @@ func ComponentLookup[T any, ID Int](storage *Storage[ID]) (int, bool) {
 		}
 	}
 	return 0, false
-}
-
-func (storage *Storage[ID]) compoundRebuild(id int) {
-	compound := storage.Compounds[id]
-	total := len(compound.EntitysRemoved)
-	if len(compound.Entitys) == total {
-		storage.Compounds = sliceRemove(storage.Compounds, id)
-		return
-	}
-	idxRemove := make([]int, total)
-	skipID, skipCount := compound.EntitysRemoved[0], 0
-	for idx, id := range compound.Entitys {
-		if id == skipID {
-			idxRemove[skipCount] = idx
-			skipCount++
-			if skipCount == total {
-				break
-			}
-			skipID = compound.EntitysRemoved[skipCount]
-		}
-	}
-	log.Println("Cleanup", total, "/", len(compound.Entitys))
-	panic("stop")
-	for idx := range idxRemove {
-		compound.Entitys = sliceRemove(compound.Entitys, idx)
-		for _, component := range compound.Components {
-			component.Data.remove(idx)
-		}
-	}
-	compound.EntitysRemoved = nil
 }

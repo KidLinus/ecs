@@ -2,6 +2,7 @@ package ecs
 
 import (
 	"encoding/json"
+	"fmt"
 	"math"
 	"testing"
 
@@ -197,16 +198,16 @@ func BenchmarkLoopEcsMixedQuery(b *testing.B) {
 
 func TestBasicRemoveQuery(t *testing.T) {
 	storage := New[uint32]()
-	Set1(storage, 1, Position{100, 200})
+	Set1(storage, 3, Position{100, 200})
 	Set1(storage, 2, Position{200, 200})
-	Set1(storage, 3, Momentum{10, -10})
+	Set1(storage, 1, Momentum{10, -10})
 	Query1[Position](storage).Each(func(id uint32, p *Position) {
 		p.X += 10
 		p.Y += 3
 	})
 	storage.Remove(3)
-	storage.Remove(1)
 	storage.Remove(2)
+	storage.Remove(1)
 	Query1[Position](storage).Each(func(id uint32, p *Position) {})
 	Query1[Momentum](storage).Each(func(id uint32, p *Momentum) {})
 	js, err := json.Marshal(storage)
@@ -214,4 +215,284 @@ func TestBasicRemoveQuery(t *testing.T) {
 		panic(err)
 	}
 	t.Log(string(js))
+}
+
+// After mutex
+// BenchmarkPut1m-8               	       5	 237636824 ns/op	193814433 B/op	 1038556 allocs/op
+// Benchmark1mMove-8              	     333	   3690498 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkBouncing-8            	     220	   5439721 ns/op	       0 B/op	       0 allocs/op
+// Benchmark1mMoveQuery-8         	     319	   3718086 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkLoopEcsMixedQuery-8   	   17371	     72591 ns/op	   10126 B/op	       3 allocs/op
+
+// After PROPER mutex
+// BenchmarkPut1m-8               	       4	 256931292 ns/op	193812948 B/op	 1038544 allocs/op
+// Benchmark1mMove-8              	     265	   4460548 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkBouncing-8            	     190	   6312361 ns/op	       0 B/op	       0 allocs/op
+// Benchmark1mMoveQuery-8         	     264	   4390330 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkLoopEcsMixedQuery-8   	   14545	     76777 ns/op	    8783 B/op	       4 allocs/op
+
+// After fixing removal using map
+// BenchmarkPut1m-8                	       4	 256507888 ns/op	193811240 B/op	 1038520 allocs/op
+// Benchmark1mMove-8               	     279	   4177591 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkBouncing-8             	     194	   6392055 ns/op	       0 B/op	       0 allocs/op
+// Benchmark1mMoveQuery-8          	     250	   4471713 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkLoopEcsMixedQuery-8    	    9624	    126884 ns/op	    8648 B/op	       4 allocs/op
+
+// BenchmarkPut1m-8                	       4	 314491522 ns/op	193808216 B/op	 1038502 allocs/op
+// Benchmark1mMove-8               	     242	   4932917 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkBouncing-8             	     182	   6495416 ns/op	       0 B/op	       0 allocs/op
+// Benchmark1mMoveQuery-8          	     237	   4777694 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkLoopEcsMixedQuery-8    	   16764	     72545 ns/op	    9974 B/op	       4 allocs/op
+
+// Fixin remove logic
+// BenchmarkPut1m-8                	       4	 334963309 ns/op	193804428 B/op	 1038468 allocs/op
+// Benchmark1mMove-8               	     226	   4861445 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkBouncing-8             	     183	   6497502 ns/op	       0 B/op	       0 allocs/op
+// Benchmark1mMoveQuery-8          	     261	   4653538 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkLoopEcsMixedQuery-8    	   15938	     74471 ns/op	    8032 B/op	       4 allocs/op
+
+// Also removing removal indexes
+// BenchmarkPut1m-8                	       4	 275323257 ns/op	193824296 B/op	 1038647 allocs/op
+// Benchmark1mMove-8               	     271	   4509466 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkBouncing-8             	     186	   6392391 ns/op	       0 B/op	       0 allocs/op
+// Benchmark1mMoveQuery-8          	     260	   4655701 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkLoopEcsMixedQuery-8    	   15963	     77232 ns/op	    8018 B/op	       4 allocs/op
+
+// Updated generator to match
+// BenchmarkPut1m-8                	       4	 260577882 ns/op	193804004 B/op	 1038464 allocs/op
+// Benchmark1mMove-8               	     270	   4618143 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkBouncing-8             	     190	   6335551 ns/op	       0 B/op	       0 allocs/op
+// Benchmark1mMoveQuery-8          	     264	   4441990 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkLoopEcsMixedQuery-8    	   15588	     78227 ns/op	    8206 B/op	       4 allocs/op
+
+func Benchmark1000x10Array(b *testing.B) {
+	var items []int
+	for i := 0; i < 1000; i++ {
+		items = append(items, i)
+	}
+	var remove []int
+	for i := 0; i < 10; i++ {
+		remove = append(remove, rand.Intn(len(items)))
+	}
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		for _, i := range items {
+			for _, r := range remove {
+				if i == r {
+					break
+				}
+			}
+		}
+	}
+}
+
+func Benchmark1000x10MapData(b *testing.B) {
+	var items []int
+	for i := 0; i < 1000; i++ {
+		items = append(items, i)
+	}
+	var remove []int
+	for i := 0; i < 10; i++ {
+		remove = append(remove, rand.Intn(len(items)))
+	}
+	var target int
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		m := map[int]int{}
+		for idx, i := range items {
+			m[i] = idx
+		}
+		for _, r := range remove {
+			target = m[r]
+		}
+	}
+	fmt.Sprint(target)
+}
+
+func Benchmark1000x10MapTarget(b *testing.B) {
+	var items []int
+	for i := 0; i < 1000; i++ {
+		items = append(items, i)
+	}
+	var remove []int
+	for i := 0; i < 10; i++ {
+		remove = append(remove, rand.Intn(len(items)))
+	}
+	var target int
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		m := map[int]struct{}{}
+		for _, i := range remove {
+			m[i] = struct{}{}
+		}
+		for _, r := range items {
+			if _, ok := m[r]; ok {
+				target++
+			}
+		}
+	}
+	fmt.Sprint(target)
+}
+
+func Benchmark10000x10Array(b *testing.B) {
+	var items []int
+	for i := 0; i < 10000; i++ {
+		items = append(items, i)
+	}
+	var remove []int
+	for i := 0; i < 10; i++ {
+		remove = append(remove, rand.Intn(len(items)))
+	}
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		for _, i := range items {
+			for _, r := range remove {
+				if i == r {
+					break
+				}
+			}
+		}
+	}
+}
+
+func Benchmark10000x10MapData(b *testing.B) {
+	var items []int
+	for i := 0; i < 10000; i++ {
+		items = append(items, i)
+	}
+	var remove []int
+	for i := 0; i < 10; i++ {
+		remove = append(remove, rand.Intn(len(items)))
+	}
+	var target int
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		m := map[int]int{}
+		for idx, i := range items {
+			m[i] = idx
+		}
+		for _, r := range remove {
+			target = m[r]
+		}
+	}
+	fmt.Sprint(target)
+}
+
+func Benchmark10000x10MapTarget(b *testing.B) {
+	var items []int
+	for i := 0; i < 1000; i++ {
+		items = append(items, i)
+	}
+	var remove []int
+	for i := 0; i < 10; i++ {
+		remove = append(remove, rand.Intn(len(items)))
+	}
+	var target int
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		m := map[int]struct{}{}
+		for _, i := range remove {
+			m[i] = struct{}{}
+		}
+		for _, r := range items {
+			if _, ok := m[r]; ok {
+				target++
+			}
+		}
+	}
+	fmt.Sprint(target)
+}
+
+func Benchmark10000x100Array(b *testing.B) {
+	var items []int
+	for i := 0; i < 10000; i++ {
+		items = append(items, i)
+	}
+	var remove []int
+	for i := 0; i < 100; i++ {
+		remove = append(remove, rand.Intn(len(items)))
+	}
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		for _, i := range items {
+			for _, r := range remove {
+				if i == r {
+					break
+				}
+			}
+		}
+	}
+}
+
+func Benchmark10000x100MapData(b *testing.B) {
+	var items []int
+	for i := 0; i < 10000; i++ {
+		items = append(items, i)
+	}
+	var remove []int
+	for i := 0; i < 100; i++ {
+		remove = append(remove, rand.Intn(len(items)))
+	}
+	var target int
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		m := map[int]int{}
+		for idx, i := range items {
+			m[i] = idx
+		}
+		for _, r := range remove {
+			target = m[r]
+		}
+	}
+	fmt.Sprint(target)
+}
+
+func Benchmark10000x100MapTarget(b *testing.B) {
+	var items []int
+	for i := 0; i < 1000; i++ {
+		items = append(items, i)
+	}
+	var remove []int
+	for i := 0; i < 100; i++ {
+		remove = append(remove, rand.Intn(len(items)))
+	}
+	var target int
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		m := map[int]struct{}{}
+		for _, i := range remove {
+			m[i] = struct{}{}
+		}
+		for _, r := range items {
+			if _, ok := m[r]; ok {
+				target++
+			}
+		}
+	}
+	fmt.Sprint(target)
+}
+
+func Benchmark1x1MapTarget(b *testing.B) {
+	var items []int
+	for i := 0; i < 1; i++ {
+		items = append(items, i)
+	}
+	var remove []int
+	for i := 0; i < 1; i++ {
+		remove = append(remove, rand.Intn(len(items)))
+	}
+	var target int
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		m := map[int]struct{}{}
+		for _, i := range remove {
+			m[i] = struct{}{}
+		}
+		for _, r := range items {
+			if _, ok := m[r]; ok {
+				target++
+			}
+		}
+	}
+	fmt.Sprint(target)
 }

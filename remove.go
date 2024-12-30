@@ -1,6 +1,8 @@
 package ecs
 
 func (storage *Storage[ID]) Remove(id ID) {
+	storage.lock.Lock()
+	defer storage.lock.Unlock()
 	entity, ok := storage.Entitys[id]
 	if !ok {
 		return
